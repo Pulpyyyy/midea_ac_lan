@@ -39,9 +39,10 @@ expected values via the Midea app or the remote control). Each value is optional
 
 ### Capabilities (modes / swing / presets)
 
-The available run-modes, swing support and presets are detected automatically
-from the device's B5 capability report. A cooling-only portable AC, for example,
-then exposes only `cool`/`dry`/`fan_only`, no swing, and no presets.
+The available run-modes, fan speeds, swing support and presets are detected
+automatically from the device's B5 capability report. A cooling-only portable
+AC, for example, then exposes only `cool`/`dry`/`fan_only`, the `low`/`high`/
+`auto` fan speeds, no swing, and no presets.
 
 Some capabilities cannot be derived (older library, or features the protocol
 does not declare such as the `comfort` and `sleep` presets). You can override
