@@ -25,21 +25,45 @@ Default step: 0.5
 { "temperature_step": 1 }
 ```
 
-### Limit modes / disable swing
+### Temperature range of AC
 
-Some devices do not support every generic AC capability — e.g. a cooling-only
-portable AC has no swing and no `heat`/`auto` modes. The device does not report
-this reliably, so you can declare it (confirm via the Midea app or remote):
+The min/max target temperature shown by the climate entity. By default it is
+read from the device capability (B5 message) when available, otherwise it falls
+back to 16–30 °C. Set these options to override the range manually, for example
+when your device reports a wrong range or does not report one at all (confirm the
+expected values via the Midea app or the remote control). Each value is optional.
 
 ```json
-{ "swing": false, "hvac_modes": ["off", "cool", "dry", "fan_only"] }
+{ "min_temperature": 16, "max_temperature": 30 }
 ```
 
-- `swing` (bool): when `false`, the climate no longer advertises a swing control.
+### Capabilities (modes / swing / presets)
+
+The available run-modes, swing support and presets are detected automatically
+from the device's B5 capability report. A cooling-only portable AC, for example,
+then exposes only `cool`/`dry`/`fan_only`, no swing, and no presets.
+
+Some capabilities cannot be derived (older library, or features the protocol
+does not declare such as the `comfort` and `sleep` presets). You can override
+them via customize (confirm the real values via the Midea app or remote):
+
+```json
+{
+  "swing": false,
+  "hvac_modes": ["off", "cool", "dry", "fan_only"],
+  "preset_modes": ["none"]
+}
+```
+
+- `swing` (bool): force the swing control on/off.
 - `hvac_modes` (list): restrict the modes shown. `off` is always kept. Valid
   values: `off`, `auto`, `cool`, `dry`, `heat`, `fan_only`.
+- `preset_modes` (list): restrict the presets. `none` is always kept; use
+  `["none"]` to remove the preset control entirely. Valid values: `none`,
+  `comfort`, `eco`, `boost`, `sleep`, `away`.
 
-Both keys are optional; omit them to keep the default full set.
+Priority is customize > B5 capabilities > defaults. All keys are optional; omit
+them to use the auto-detected set.
 
 ### Power consumption analysis method
 
